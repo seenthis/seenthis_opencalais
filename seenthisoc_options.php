@@ -43,4 +43,50 @@ function OC_site($id_syndic) {
 
 }
 
+
+$GLOBALS["oc_lies"] = array();
+
+function reset_oc_lies($rien) {
+	$GLOBALS["oc_lies"] = array();
+}
+
+function compter_oc_lies($id_mot, $relevance) {
+	if ($relevance > 300 && $relevance > $GLOBALS["oc_lies"]["$id_mot"]) $GLOBALS["oc_lies"]["$id_mot"] = $relevance;	
+}
+
+function retour_oc_lies($rien) {
+	arsort($GLOBALS["oc_lies"]);
+	foreach($GLOBALS["oc_lies"] as $id_mot => $k) {
+		if ($k > 1) {
+			$ret[] = $id_mot;
+		}
+	}
+	return $ret;
+}
+
+
+function stocker_rel($id_mot, $lien, $off) {
+	$GLOBALS["oc_rel"]["$id_mot"] = "mot$id_mot-$lien";
+	if ($off == "oui") $GLOBALS["oc_off"]["$id_mot"] = "off";
+}
+
+function afficher_rel_mot($id_mot) {
+	return $GLOBALS["oc_rel"]["$id_mot"];
+}
+
+function afficher_off_mot($id_mot) {
+	return $GLOBALS["oc_off"]["$id_mot"];
+}
+
+// fonction appelee lors d'une modif
+// afin de programmer une tache de thematisation par opencalais
+function oc_thematiser_message($id_me) {
+	$p = sql_fetsel("id_parent", "spip_me", "id_me=$id_me");
+	if ($p['id_parent'] > 0) {
+		job_queue_add('OC_message', 'thématiser message '.$p['id_parent'], array($p['id_parent']));
+	} else {
+		job_queue_add('OC_message', 'thématiser message '.$id_me, array($id_me));
+	}
+}
+
 ?>
