@@ -26,8 +26,7 @@ function OC_site($id_syndic) {
 	if (strlen($texte) > 10) {
 		traiterOpenCalais($texte, $id_syndic, "id_syndic", "spip_syndic_oc");
 	}
-	supprimer_microcache($id_syndic, "noisettes/oc_site");
-	
+
 	$query = sql_select("id_mot", "spip_syndic_oc", "id_syndic=$id_syndic");
 	while ($row = sql_fetch($query)) {
 		$id_mot = $row["id_mot"];
