@@ -1,5 +1,11 @@
 <?php
 
+// Définir des id_groupes de mots à exclure (par exemples les URL)
+// define('_EXCLUDE_GROUPE', '21');
+
+if (!defined("_EXCLUDE_GROUPE")) define("_EXCLUDE_GROUPE", 0);
+
+
 function OC_message($id_me) {
 	include_spip("php/opencalais");
 	
