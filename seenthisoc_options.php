@@ -33,12 +33,6 @@ function OC_site($id_syndic) {
 		traiterOpenCalais($texte, $id_syndic, "id_syndic", "spip_syndic_oc");
 	}
 
-	$query = sql_select("id_mot", "spip_syndic_oc", "id_syndic=$id_syndic");
-	while ($row = sql_fetch($query)) {
-		$id_mot = $row["id_mot"];
-		cache_mot($id_mot);
-	}
-
 	$query_syndic = sql_select("id_me", "spip_me_syndic", "id_syndic=$id_syndic");
 	while ($row_syndic = sql_fetch($query_syndic)) {
 		$id_me = $row_syndic["id_me"];
@@ -56,11 +50,12 @@ function reset_oc_lies($rien) {
 }
 
 function compter_oc_lies($id_mot, $relevance) {
-	if ($relevance > 300 && $relevance > $GLOBALS["oc_lies"]["$id_mot"]) $GLOBALS["oc_lies"]["$id_mot"] = $relevance;	
+	if ($relevance > 300 && $relevance > $GLOBALS["oc_lies"]["$id_mot"]) $GLOBALS["oc_lies"]["$id_mot"] = $relevance;
 }
 
 function retour_oc_lies($rien) {
 	arsort($GLOBALS["oc_lies"]);
+	$ret = array();
 	foreach($GLOBALS["oc_lies"] as $id_mot => $k) {
 		if ($k > 1) {
 			$ret[] = $id_mot;

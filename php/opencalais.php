@@ -169,7 +169,6 @@ function traiterOpenCalais($texte, $id, $id_tag="id_article", $lien) {
 						"off" => $off["$id_mot"]
 					)
 				);
-				cache_mot($id_mot);
 			}
 			
 		}	

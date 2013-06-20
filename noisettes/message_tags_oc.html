@@ -1,8 +1,9 @@
 [(#VAL{rien}|reset_oc_lies)]
 
-<BOUCLE_calais_me(MOTS spip_me_mot) {spip_mots.id_groupe!=1} {spip_me_mot.id_me=#ENV{id}}{spip_me_mot.relevance>300}{!par spip_me_mot.relevance}{doublons}>
-		[(#ID_MOT|compter_oc_lies{#RELEVANCE})]
-		[(#ID_MOT|stocker_rel{me#ID_ME,#OFF})]
+<BOUCLE_calais_me(spip_me_tags) {id_me=#ENV{id}} {class!=#}
+{relevance>300}{!par relevance}>
+	[(#TAG*|compter_oc_lies{#RELEVANCE})]
+	[(#TAG*|stocker_rel{me#ID_ME,#OFF})]
 </BOUCLE_calais_me>
 
 <BOUCLE_sites_lies(spip_me_syndic){id_me=#ENV{id}}>
@@ -13,14 +14,13 @@
 	</B_calais_site>
 </BOUCLE_sites_lies>
 
-
-
-
 <B_calais>
 <ul class="mots_lies" id="mots_lies_#ID_ME">
-<BOUCLE_calais(MOTS spip_me_mot) {id_mot IN (#REM|retour_oc_lies)}{id_groupe !IN #EVAL{_EXCLUDE_GROUPE}}>
+<BOUCLE_calais(spip_me_tags) {tag IN (#REM|retour_oc_lies)}
+{id_groupe !IN #EVAL{_EXCLUDE_GROUPE}}
+>
 	
-	<li class="oc_mot[ (#ID_MOT|afficher_off_mot)]">#<a href="#URL_MOT"[ rel="(#ID_MOT|afficher_rel_mot)"]>#TITRE</a></li>
+	<li class="oc_mot[ (#TAG*|afficher_off_mot)]"><a href="#URL_TAG"[ rel="(#TAG*|afficher_rel_mot)"]>#TAG</a></li>
 </BOUCLE_calais>
 
 	<li>
