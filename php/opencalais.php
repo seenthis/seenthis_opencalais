@@ -53,14 +53,11 @@ function getOpenCalais($content) {
 }
 
 /*
- * Va chercher les tags openCalais d'un contenu, et met les mots-clés
- * correspondants dans la table spip_mots (+spip_groupes_mots)
- * ainsi que dans les tables de liaison :
- * - spip_me_mot pour les messages
- * - spip_syndic_oc pour les textes récupérés sur des sites distants
+ * Va chercher les tags openCalais d'un contenu, et met les tags
+ * correspondants dans la table :
+ * - spip_me_tags pour les messages
+ * - spip_oc_uri pour les textes récupérés sur des sites distants
  *
- * on ajoute (NEW STYLE) la table spip_me_tags, dans un premier temps
- * pour les messages uniquement
  */
 function traiterOpenCalais($texte, $id, $id_tag="id_article", $lien) {
 
@@ -70,6 +67,7 @@ function traiterOpenCalais($texte, $id, $id_tag="id_article", $lien) {
 	
 	
 	$oc = getOpenCalais($texte);
+
 	if (!is_array($oc)) {
 		spip_log("erreur opencalais sur $id_tag=$id");
 		return false;
@@ -109,70 +107,28 @@ function traiterOpenCalais($texte, $id, $id_tag="id_article", $lien) {
 		}
 	}
 
+	// spip_oc_uri, pour les sites
+	if ($id_tag == 'id_syndic') {
+		// recuperer l'uri
+		$u = sql_fetsel('url_site', 'spip_syndic', 'id_syndic='.sql_quote($id));
+		$uri = $u['url_site'];
+		$idoff = sql_allfetsel('tag', 'spip_oc_uri', 'uri='.sql_quote($uri).' AND off="oui"');
 
-	//
-	//  (OLD STYLE : mots-clés ; encore valable pour les spip_syndic_oc…)
-	//
-
-	// se souvenir des liens masques par l'utilisateur (off=oui)
-	$off = array();
-	$query = sql_select("*", "$lien", "off = 'oui' && $id_tag=".sql_quote($id));
-	while($row = sql_fetch($query)) {
-		$id_mot = $row["id_mot"];
-		$off["$id_mot"] = "oui";
-	}
-	
-	// effacer les éventuels liens openCalais déjà présents
-	sql_delete("$lien", "relevance > 0 && $id_tag=".sql_quote($id));
-
-	// mettre les nouveaux liens openCalais
-	foreach ($oc AS $tag) {
-		$typeGroup = $tag->_typeGroup;
-		if ($typeGroup == "entities") {
-			$groupe_mot = $tag->_type;
-			$nom = $tag->name;
-			$relevance = $tag->relevance;
-		
-			//echo "<hr>";
-			//echo "<li>$groupe_mot / <b>$nom</b> ($relevance)";
-			//print_r($tag);
-			
-			if($relevance > 0.3) {
-			
-				$query_groupe = sql_select("id_groupe", "spip_groupes_mots", "titre=".sql_quote($groupe_mot));
-				if ($row_groupe = sql_fetch($query_groupe)) {
-					$id_groupe = $row_groupe["id_groupe"];
-				} else {
-					$id_groupe = sql_insertq("spip_groupes_mots",
-						array("titre" => $groupe_mot)
-					);
-				}
-				
-				$query_mot = sql_select("id_mot", "spip_mots", "titre=".sql_quote($nom)." AND id_groupe=$id_groupe");
-				if ($row_mot = sql_fetch($query_mot)) {
-					$id_mot = $row_mot["id_mot"];
-				} else {
-					$id_mot = sql_insertq("spip_mots",
-						array(
-							"id_groupe" => $id_groupe,
-							"titre" => $nom
-						)
-					);
-				}
-				
-				//echo "<li>$lien - $nom - $id_mot - $id_tag - $id - ".$off["$id_mot"];
-				sql_insertq($lien,
-					array(
-						"id_mot" => $id_mot,
-						"$id_tag" => $id,
-						"relevance" => round($relevance * 1000),
-						"off" => $off["$id_mot"]
-					)
-				);
+		sql_delete('spip_oc_uri', 'uri='.sql_quote($uri));
+		foreach($tags as $tag => $relevance) {
+			if ($relevance > 300) {
+				$off = in_array(array('tag'=>$tag), $idoff);
+				sql_insertq('spip_oc_uri', $c = array(
+					'uri' => $uri,
+					'tag' => $tag,
+					'relevance' => $relevance,
+					'off' => $off ? 'oui' : 'non'
+				));
 			}
-			
-		}	
+		}
 	}
+
+	return $tags;
 
 }
 

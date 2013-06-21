@@ -1,32 +1,13 @@
-[(#VAL{rien}|reset_oc_lies)]
-
-<BOUCLE_calais_me(spip_me_tags) {id_me=#ENV{id}} {class!=#}
-{relevance>300}{!par relevance}>
-	[(#TAG*|compter_oc_lies{#RELEVANCE})]
-	[(#TAG*|stocker_rel{me#ID_ME,#OFF})]
-</BOUCLE_calais_me>
-
-<BOUCLE_sites_lies(spip_me_syndic){id_me=#ENV{id}}>
-	<BOUCLE_calais_site(MOTS spip_syndic_oc) {spip_syndic_oc.id_syndic=#ID_SYNDIC}{relevance>300}{par relevance}{inverse}{doublons}>
-		[(#ID_MOT|compter_oc_lies{[(#RELEVANCE|mult{0.7}|floor)]})]
-		[(#ID_MOT|stocker_rel{me#ID_ME-syndic#ID_SYNDIC,#OFF})]
-	</BOUCLE_calais_site>
-	</B_calais_site>
-</BOUCLE_sites_lies>
-
 <B_calais>
-<ul class="mots_lies" id="mots_lies_#ID_ME">
-<BOUCLE_calais(spip_me_tags) {tag IN (#REM|retour_oc_lies)}
-{id_groupe !IN #EVAL{_EXCLUDE_GROUPE}}
->
-	
-	<li class="oc_mot[ (#TAG*|afficher_off_mot)]"><a href="#URL_TAG"[ rel="(#TAG*|afficher_rel_mot)"]>#TAG</a></li>
-</BOUCLE_calais>
-
-	<li>
-		<a onclick="$(this).parents('.mots_lies').addClass('edition'); return false;" 
-			href="#" class="modifier_themes"></a>
-	</li>
+<ul class="mots_lies" id="mots_lies_[(#ID_ME|sinon{#ID})]">
+<BOUCLE_calais(spip_me_tags)
+{id_me=#ID_ME|sinon{#ID}}
+{tag !== ^url:}
+{relevance>300}
+{off=non}
+{fusion tag}
+>[	<li class="oc_mot"><a href="#URL_TAG">(#TAG|replace{^.*:,#})</a></li>
+]</BOUCLE_calais>
 
 </ul>
 

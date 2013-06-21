@@ -1,51 +1,76 @@
 #CACHE{0}
 
-[(#REM)
-	[(#ENV{id}|OC_message)]
-]
-
-<B_mots>
+<B_tags>
 <div class="mots_lies">
+
 <h3>thèmes</h3>
 <ul>
-<BOUCLE_mots(MOTS spip_me_mot) {id_groupe=1} {spip_me_mot.id_me=#ENV{id}}{par titre}>
-	<li>#<a href="#URL_MOT"><strong>#TITRE</strong></a></li>
-</BOUCLE_mots>
+<BOUCLE_tags(spip_me_tags) {id_me=#ID} {class=#}
+{fusion tag}
+>
+	<li>#<a href="#URL_TAG"><strong>[(#TAG|replace{#})]</strong></a></li>
+</BOUCLE_tags>
+
 </ul>
 </div>
-</B_mots>
+</B_tags>
 
+<BOUCLE_auteur(ME){id_me=#ID}{id_auteur=#SESSION{id_auteur}}>#SET{auteur,' '}
 
-<BOUCLE_sites_lies(spip_me_syndic){id_me=#ENV{id}}>
-	<BOUCLE_calais_site(MOTS spip_syndic_oc) {spip_syndic_oc.id_syndic=#ID_SYNDIC}{relevance>300}{par relevance}{inverse}{spip_syndic_oc.off!=oui}>
-		[(#ID_MOT|compter_oc_lies{[(#RELEVANCE|mult{0.7}|floor)]})]
-	</BOUCLE_calais_site>
-	</B_calais_site>
-</BOUCLE_sites_lies>
+<style>
+/* http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-easy-css3-checkboxes-and-radio-buttons/ */
 
+input[type="checkbox"].nice {
+    display:none;
+}
 
-<BOUCLE_calais_me(MOTS spip_me_mot) {spip_mots.id_groupe!=1} {spip_me_mot.id_me=#ENV{id}}{spip_me_mot.relevance>300}{!par spip_me_mot.relevance}{spip_me_mot.off!=oui}>
-		[(#ID_MOT|compter_oc_lies{#RELEVANCE})]
-</BOUCLE_calais_me>
+input[type="checkbox"].nice + label {
+    color:#f2f2f2;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+}
 
+input[type="checkbox"].nice + label {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    background:url([(#CHEMIN{images/check_radio_sheet.png})]) left top no-repeat;
+    cursor:pointer;
+}
+
+input[type="checkbox"]:checked + label {
+    background:url([(#CHEMIN{images/check_radio_sheet.png})]) -19px top no-repeat;
+}
+
+</style>
+
+</BOUCLE_auteur>
 
 <B_calais>
 <div class="mots_lies">
 <h3 class="texte_afficher_themes"></h3>
 <ul>
-<BOUCLE_calais(MOTS){id_mot IN (#REM|retour_oc_lies)}{id_groupe !IN #EVAL{_EXCLUDE_GROUPE}}>
+<BOUCLE_calais(spip_me_tags){id_me=#ID}
+{class=oc}
+{relevance>300}
+{fusion tag}
+>
 	<li>
-		<BOUCLE_groupe(GROUPES_MOTS){id_groupe}>
-		<span class="groupe_mot">#TITRE:</span>
-		</BOUCLE_groupe>
-	
-		<a href="#URL_MOT">
-			<span class="mot">#TITRE</span>
+	[(#GET{auteur})
+	<input type="checkbox"
+	class="nice"
+	id="tag-[(#TAG*|crc32)]" [ checked="(#OFF|=={non}|?{checked})"] onchange="document.location='[(#URL_ACTION{lien_mot}|parametre_url{statut,[(#OFF|=={non}|?{desactiver,activer})]}|parametre_url{relation,mot#TAG*-me#ID_ME}|parametre_url{date,#DATE})]';" /><label for="tag-[(#TAG*|crc32)]"> </label>
+	]
+		[(#TAG|match{^.*:})]<a href="#URL_TAG"><span class="mot">[(#TAG|replace{^.*:})]</span>
 		</a>
 	</li>
+
 </BOUCLE_calais>
 </ul>
 <div class="explication">thématisation automatique par <a href="http://www.opencalais.com/">OpenCalais</a></div>
 </div>
-</B_calais>		
+</B_calais>
+
 #FILTRE{mini_html}

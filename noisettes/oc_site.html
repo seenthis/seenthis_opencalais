@@ -4,19 +4,18 @@
 ]
 
 
-
+<BOUCLE_uri(SITES){id_syndic=#ID}>
 <B_calais>
 <div class="mots_lies">
 <h3>thèmes de ce site</h3>
 <ul>
-<BOUCLE_calais(MOTS spip_syndic_oc) {spip_syndic_oc.id_syndic=#ENV{id}}{spip_syndic_oc.off!=oui}{relevance>300}{par relevance}{inverse}>
+<BOUCLE_calais(spip_oc_uri) {uri=#URL_SITE*} {off!=oui}{relevance>300}{par relevance}{inverse}
+{tag!==^url:}
+>
 	<li>
-		<BOUCLE_groupe(GROUPES_MOTS){id_groupe}>
-		<span class="groupe_mot">#TITRE:</span>
-		</BOUCLE_groupe>
-	
-		<a href="#URL_MOT">
-			<span class="mot">#TITRE</span>
+		[<span class="groupe_mot">(#TAG|match{^.*:})</span>]
+		<a href="#URL_TAG">
+			<span class="mot">[(#TAG|replace{^.*:})]</span>
 		</a>
 	</li>
 </BOUCLE_calais>
@@ -24,5 +23,6 @@
 <div class="explication">thématisation automatique par <a href="http://www.opencalais.com/">OpenCalais</a></div>
 </div>
 </B_calais>
-		
+
+</BOUCLE_uri>
 #FILTRE{mini_html}

@@ -39,6 +39,7 @@ function seenthisoc_declarer_tables_principales($tables_principales){
 */
 
 function seenthisoc_declarer_tables_auxiliaires($tables_auxiliaires){
+	/*
 	$tables_auxiliaires['spip_syndic_oc'] = seenthis_lire_create_table(
 	"
   `id_syndic` bigint(21) NOT NULL,
@@ -49,6 +50,23 @@ function seenthisoc_declarer_tables_auxiliaires($tables_auxiliaires){
   KEY `id_mot` (`id_mot`)
 "
 	);
+	*/
+
+## table cree a l'upgrade, par injection des donnees…
+/*
+	$tables_auxiliaires['spip_oc_uri'] = seenthis_lire_create_table(
+	"
+  `uri` text NOT NULL,
+  `relevance` int(11) NOT NULL,
+  `off` varchar(3) NOT NULL DEFAULT 'non',
+  `tag` longtext NOT NULL
+"
+## SPIP 2.1 n'accepte pas les KEY avec (60)
+## on l'ajoute a la main plus bas
+#		KEY `tag` (`tag`(60)),
+#		KEY `uri` (`uri`(60)),
+	);
+*/
 
 	return $tables_auxiliaires;
 
@@ -56,10 +74,12 @@ function seenthisoc_declarer_tables_auxiliaires($tables_auxiliaires){
 
 function seenthisoc_upgrade($nom_meta_base_version,$version_cible){
 	$current_version = 0.0;
+
+
 	if ((!isset($GLOBALS['meta'][$nom_meta_base_version]) )
 	|| (($current_version = $GLOBALS['meta'][$nom_meta_base_version])!=$version_cible)){
 		include_spip('base/abstract_sql');
-		if (version_compare($current_version,"1.0.1",'<')){
+		if (version_compare($current_version,"1.0.2",'<')){
 			include_spip('base/serial');
 			include_spip('base/auxiliaires');
 			include_spip('base/create');
@@ -68,6 +88,19 @@ function seenthisoc_upgrade($nom_meta_base_version,$version_cible){
 			maj_tables(array(
 				'spip_syndic_oc',
 			));
+			
+			if (version_compare($current_version,"1.0.2",'<')) {
+				seenthisoc_recuperer_tags_102();
+				sql_query("ALTER TABLE spip_oc_uri ADD INDEX `tag` (`tag`(60))");
+				sql_query("ALTER TABLE spip_oc_uri ADD INDEX `uri` (`uri`(60))");
+			}
+
+		/* pour la version suivante 
+			if (version_compare($current_version,"1.0.3",'<')) {
+				sql_drop_table("spip_syndic_oc");
+			}
+		*/
+
 			ecrire_meta($nom_meta_base_version,$current_version=$version_cible,'non');
 		}
 
@@ -97,5 +130,17 @@ function seenthisoc_install($action,$prefix,$version_cible){
 	}
 }
 
+# en 1.0.2, reinjecter dans spip_syndic_oc les tags qui sont disperses
+# sous forme groupe,mot,id_mot,id_syndic :
+function seenthisoc_recuperer_tags_102() {
+	sql_query("CREATE TABLE spip_oc_uri SELECT a.relevance, a.off,
+		CONCAT( CONCAT(g.titre,':'), m.titre ) as tag, u.url_site AS uri
+		FROM spip_syndic_oc AS a
+			LEFT JOIN spip_mots AS m ON a.id_mot=m.id_mot
+			LEFT JOIN spip_groupes_mots AS g ON m.id_groupe=g.id_groupe
+			LEFT JOIN spip_syndic AS u ON u.id_syndic=a.id_syndic
+		");
+
+}
 
 ?>
