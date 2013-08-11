@@ -40,7 +40,7 @@ function seenthisoc_thematiser($flux) {
 
 	# spip_log($flux, 'debug');
 
-	if (in_array($flux['action'], array('update', 'create')) {
+	if (in_array($flux['action'], array('update', 'create'))) {
 
 		if ($id_me = $flux['id_me']) {
 
