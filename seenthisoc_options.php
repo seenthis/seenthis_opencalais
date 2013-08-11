@@ -40,17 +40,22 @@ function seenthisoc_thematiser($flux) {
 
 	# spip_log($flux, 'debug');
 
-	if ($id_me = $flux['id_me']) {
+	if (in_array($flux['action'], array('update', 'create')) {
 
-		$p = sql_fetsel("id_parent", "spip_me", "id_me=$id_me");
-		if ($p['id_parent'] > 0) {
-			job_queue_add('OC_message', 'thématiser message '.$p['id_parent'], array($p['id_parent']));
-		} else {
-			job_queue_add('OC_message', 'thématiser message '.$id_me, array($id_me));
+		if ($id_me = $flux['id_me']) {
+
+			$p = sql_fetsel("id_parent", "spip_me", "id_me=$id_me");
+			if ($p['id_parent'] > 0) {
+				job_queue_add('OC_message', 'thématiser message '.$p['id_parent'], array($p['id_parent']));
+			} else {
+				job_queue_add('OC_message', 'thématiser message '.$id_me, array($id_me));
+			}
+		} else if ($id_syndic = $flux['id_syndic']) {
+			job_queue_add('OC_site', 'thématiser site '.$flux['url'], array($id_syndic));
 		}
-	} else if ($id_syndic = $flux['id_syndic']) {
-		job_queue_add('OC_site', 'thématiser site '.$flux['url'], array($id_syndic));
 	}
+
+	return $flux;
 }
 
 ?>
