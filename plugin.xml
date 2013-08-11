@@ -15,6 +15,12 @@
 	</pipeline>
 
 	<pipeline>
+		<nom>seenthis_instance_objet</nom>
+		<action>thematiser</action>
+		<inclure>seenthisoc_options.php</inclure>
+	</pipeline>
+
+	<pipeline>
 		<nom>declarer_champs_extras</nom>
 		<inclure>base/seenthisoc.php</inclure>
 	</pipeline>
@@ -23,6 +29,7 @@
 	<install>base/seenthisoc.php</install>
 
 	<necessite id="SPIP" version="[2.1.0;]" />
+	<necessite id="seenthis" />
 	<necessite id="queue" />
 </plugin>
 

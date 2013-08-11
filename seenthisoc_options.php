@@ -18,6 +18,7 @@ function OC_message($id_me) {
 }
 
 function OC_site($id_syndic) {
+
 	include_spip("php/opencalais");
 	
 	$query = sql_select("texte", "spip_syndic", "id_syndic=$id_syndic");
@@ -34,12 +35,21 @@ function OC_site($id_syndic) {
 
 // fonction appelee lors d'une modif
 // afin de programmer une tache de thematisation par opencalais
-function oc_thematiser_message($id_me) {
-	$p = sql_fetsel("id_parent", "spip_me", "id_me=$id_me");
-	if ($p['id_parent'] > 0) {
-		job_queue_add('OC_message', 'thématiser message '.$p['id_parent'], array($p['id_parent']));
-	} else {
-		job_queue_add('OC_message', 'thématiser message '.$id_me, array($id_me));
+// [ anciennement function oc_thematiser_message($id_me) ou OC_Site(id_syndic) ]
+function seenthisoc_thematiser($flux) {
+
+	# spip_log($flux, 'debug');
+
+	if ($id_me = $flux['id_me']) {
+
+		$p = sql_fetsel("id_parent", "spip_me", "id_me=$id_me");
+		if ($p['id_parent'] > 0) {
+			job_queue_add('OC_message', 'thématiser message '.$p['id_parent'], array($p['id_parent']));
+		} else {
+			job_queue_add('OC_message', 'thématiser message '.$id_me, array($id_me));
+		}
+	} else if ($id_syndic = $flux['id_syndic']) {
+		job_queue_add('OC_site', 'thématiser site '.$flux['url'], array($id_syndic));
 	}
 }
 
