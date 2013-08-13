@@ -119,6 +119,12 @@ function seenthisoc_install($action,$prefix,$version_cible){
 		case 'test':
 			$ok = (isset($GLOBALS['meta'][$prefix."_base_version"])
 				AND version_compare($GLOBALS['meta'][$prefix."_base_version"],$version_cible,">="));
+
+			if (!function_exists('curl_init')) {
+				$ok = false;
+				echo "<p class='error'>"._L("n&#xE9;cessite @module@", array('module' => 'php-curl'))."</p>";
+			}
+
 			return $ok;
 			break;
 		case 'install':
