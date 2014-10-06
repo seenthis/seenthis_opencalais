@@ -12,7 +12,7 @@ function OC_message($id_me) {
 	$texte = preg_replace("/"._REG_URL."/i", " ", $texte);
 	
 	$tags = traiterOpenCalais($texte, $id_me, "id_me", "spip_me_tags");
-	cache_me($id_me);
+	cache_message($id_me);
 
 	return $tags;
 }

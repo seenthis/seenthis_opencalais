@@ -67,7 +67,7 @@ function action_lien_mot() {
 		}
 		
 		if ($id_me > 0 && $autoriser) {
-			cache_me($id_me);
+			cache_message($id_me);
 			include_spip('inc/headers');
 			redirige_par_entete(generer_url_entite($id_me, 'me'));
 		}
