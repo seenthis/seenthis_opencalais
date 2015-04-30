@@ -6,8 +6,8 @@
 {relevance>300}
 {off=non}
 {fusion tag}
->[	<li class="oc_mot"><a href="#URL_TAG">(#TAG|replace{^.*:,#})</a></li>
-]</BOUCLE_calais>
+><BOUCLE_tagpasdeconnant(spip_me_tags){tag=#TAG*}{1,1}>[	<li class="oc_mot"><a href="#URL_TAG">(#TAG|replace{^.*:,#})</a></li>
+]</BOUCLE_tagpasdeconnant></BOUCLE_calais>
 
 </ul>
 
