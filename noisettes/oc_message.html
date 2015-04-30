@@ -63,7 +63,7 @@ input[type="checkbox"]:checked + label {
 	class="nice"
 	id="tag-[(#TAG*|crc32)]" [ checked="(#OFF|=={non}|?{checked})"] onchange="document.location='[(#URL_ACTION{lien_mot}|parametre_url{statut,[(#OFF|=={non}|?{desactiver,activer})]}|parametre_url{relation,mot#TAG*-me#ID_ME}|parametre_url{date,#DATE})]';" /><label for="tag-[(#TAG*|crc32)]"> </label>
 	]
-		[(#TAG|match{^.*:})]<a href="#URL_TAG"><span class="mot">[(#TAG|replace{^.*:})]</span>
+		[(#TAG|match{^.*:})]<a href="#URL_TAG" rel="nofollow"><span class="mot">[(#TAG|replace{^.*:})]</span>
 		</a>
 	</li>
 
