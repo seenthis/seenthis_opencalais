@@ -55,12 +55,14 @@ class HTTPSClientCalaisPost {
         // check cURL errors............
         if (curl_errno($ch)) {
             $this -> _errors = curl_error($ch);
-			//print_r($this -> _errors);
+			spip_log($this -> _errors, 'opencalais');
             curl_close($ch);
             return false;
         } else {
             curl_close($ch);
             //print_r($response);
+            $response = @json_decode($response);
+            spip_log($response, 'opencalais');
             return $response;
         }
     }
@@ -71,8 +73,7 @@ function getOpenCalais($content) {
 	$apiKey = _OPENCALAIS_APIKEY;
 	
 	$calais = new HTTPSClientCalaisPost();
-	$response = @json_decode($calais->request($apiKey, $content));
-
+	$response = $calais->request($apiKey, $content);
 	if (!is_object($response)) return false;
 
 	$ret = array();	
