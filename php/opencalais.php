@@ -68,7 +68,7 @@ class HTTPSClientCalaisPost {
 
 
 function getOpenCalais($content) {
-	$apiKey = 'HqAnNHeP2WAejMG8HUXgv5XlwP9G1PaC'; _OPENCALAIS_APIKEY;
+	$apiKey = _OPENCALAIS_APIKEY;
 	
 	$calais = new HTTPSClientCalaisPost();
 	$response = @json_decode($calais->request($apiKey, $content));
