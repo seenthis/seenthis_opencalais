@@ -125,7 +125,7 @@ function traiterOpenCalais($texte, $id, $id_tag="id_article", $lien) {
 
 		sql_delete('spip_me_tags', 'uuid='.sql_quote($uuid).' AND class="oc"');
 		foreach($tags as $tag => $relevance) {
-			if ($relevance > 300) {
+			if ($relevance > 100) {
 				$off = in_array(array('tag'=>$tag), $idoff);
 				sql_insertq('spip_me_tags', $c = array(
 					'uuid' => $uuid,
