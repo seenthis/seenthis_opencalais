@@ -1,53 +1,85 @@
 <?php
 
+if (!defined("_ECRIRE_INC_VERSION")) return;
+
+class HTTPSClientCalaisPost {
+    /**
+     * Errors array init....
+     * @var array
+     */
+    public $_errors = array();
+ 
+    /**
+     * Request URL init...
+     * @var string
+     */
+    protected $_url = 'https://api.thomsonreuters.com/permid/calais';
+ 
+    /**
+     * request function info....
+     *
+     * @param string $accessToken .....
+     * @return array / json Response array.....
+     */
+    public function request($accessToken,$post_content) {
+        $this -> _errors = array();
+ 
+        if( empty($accessToken) ) {
+            $this -> _errors = array('Please enter unique access key as 1st parameter');
+            return false;
+        }
+ 
+        // Init Header Params
+        $headers = array(
+            'X-AG-Access-Token: '.$accessToken,
+            "Content-Type: text/raw",
+            'Content-length: '.strlen($post_content),
+            'outputformat: application/json'
+        );
+ 
+        // Init Curl
+        $curlOptions = array (
+            CURLOPT_URL => $this -> _url,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POSTFIELDS => $post_content,
+        );
+ 
+        $ch = curl_init();
+        curl_setopt_array($ch,$curlOptions);
+ 
+        // send request and get response from api..........
+        $response = curl_exec($ch);
+ 
+        // check cURL errors............
+        if (curl_errno($ch)) {
+            $this -> _errors = curl_error($ch);
+			//print_r($this -> _errors);
+            curl_close($ch);
+            return false;
+        } else {
+            curl_close($ch);
+            //print_r($response);
+            return $response;
+        }
+    }
+}
+
 
 function getOpenCalais($content) {
-	$apiKey = _OPENCALAIS_APIKEY;
+	$apiKey = 'HqAnNHeP2WAejMG8HUXgv5XlwP9G1PaC'; _OPENCALAIS_APIKEY;
 	
-	
-	//$content = "<h1>Ceci est un essai de texte réalisé avec OpenCalais de Reuters, basé en Californie. Le Liban est un pays intéessant, et <b>Jacques Chirac</b> ne s'y est pas trompé.</h1> Je dis ça, parce que #Saad_Hariri lui a ravi la plame d'or à Cannes.";
-	$content = str_replace(array("#","_"), " ", $content);
+	$calais = new HTTPSClientCalaisPost();
+	$response = @json_decode($calais->request($apiKey, $content));
 
-	$contentType = "text/html"; // simple text - try also text/html
-	$outputFormat = "application/json"; // simple output format - try also xml/rdf and text/microformats
-	
-	$restURL = "http://api.opencalais.com/enlighten/rest/";
-	$paramsXML = "<c:params xmlns:c=\"http://s.opencalais.com/1/pred/\" " . 
-				"xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"> " .
-				"<c:processingDirectives c:contentType=\"".$contentType."\" " .
-				"c:outputFormat=\"".$outputFormat."\"".
-				"></c:processingDirectives> " .
-				"<c:userDirectives c:allowDistribution=\"false\" " .
-				"c:allowSearch=\"false\" c:externalID=\" \" " .
-				"c:submitter=\"Calais REST Sample\"></c:userDirectives> " .
-				"<c:externalMetadata><c:Caller>Calais REST Sample</c:Caller>" .
-				"</c:externalMetadata></c:params>";
-	
-	// Construct the POST data string
-	$data = "licenseID=".urlencode($apiKey);
-	$data .= "&paramsXML=".urlencode($paramsXML);
-	$data .= "&content=".rawurlencode($content); 
-	
-	// Invoke the Web service via HTTP POST
-	 $ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $restURL);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-	$response = curl_exec($ch);
-	curl_close($ch);
-	
-	$response = json_decode($response);
-	
 	if (!is_object($response)) return false;
 
 	$ret = array();	
 	foreach($response as $key => $val) {
 		if ($key != "doc") $ret[$key] = $val;
 	}
-	
+
 	return $ret;
 	
 }
