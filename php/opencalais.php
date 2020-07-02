@@ -13,7 +13,7 @@ class HTTPSClientCalaisPost {
      * Request URL init...
      * @var string
      */
-    protected $_url = 'https://api.thomsonreuters.com/permid/calais';
+    protected $_url = 'https://api-eit.refinitiv.com/permid/calais';
  
     /**
      * request function info....
