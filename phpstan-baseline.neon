@@ -1,0 +1,181 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function _request not found\\.$#"
+			count: 2
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function cache_message not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function generer_url_entite not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function redirige_par_entete not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function sql_fetch not found\\.$#"
+			count: 2
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function sql_query not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function sql_quote not found\\.$#"
+			count: 2
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function sql_select not found\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function sql_updateq not found\\.$#"
+			count: 3
+			path: action/lien_mot.php
+
+		-
+			message: "#^Undefined variable\\: \\$id_mot$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Variable \\$id_mot might not be defined\\.$#"
+			count: 1
+			path: action/lien_mot.php
+
+		-
+			message: "#^Function _L not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function creer_base not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function ecrire_meta not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function effacer_meta not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 4
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function maj_tables not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function sql_drop_table not found\\.$#"
+			count: 1
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Function sql_query not found\\.$#"
+			count: 3
+			path: base/seenthisoc.php
+
+		-
+			message: "#^Constant _OPENCALAIS_APIKEY not found\\.$#"
+			count: 1
+			path: php/opencalais.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 3
+			path: php/opencalais.php
+
+		-
+			message: "#^Function sql_allfetsel not found\\.$#"
+			count: 2
+			path: php/opencalais.php
+
+		-
+			message: "#^Function sql_delete not found\\.$#"
+			count: 2
+			path: php/opencalais.php
+
+		-
+			message: "#^Function sql_fetsel not found\\.$#"
+			count: 2
+			path: php/opencalais.php
+
+		-
+			message: "#^Function sql_insertq not found\\.$#"
+			count: 2
+			path: php/opencalais.php
+
+		-
+			message: "#^Function sql_quote not found\\.$#"
+			count: 6
+			path: php/opencalais.php
+
+		-
+			message: "#^Function cache_message not found\\.$#"
+			count: 1
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function job_queue_add not found\\.$#"
+			count: 3
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function sql_fetch not found\\.$#"
+			count: 2
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function sql_fetsel not found\\.$#"
+			count: 1
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function sql_select not found\\.$#"
+			count: 2
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Function texte_de_me not found\\.$#"
+			count: 1
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Variable \\$tags might not be defined\\.$#"
+			count: 1
+			path: seenthisoc_options.php
+
+		-
+			message: "#^Variable \\$texte might not be defined\\.$#"
+			count: 4
+			path: seenthisoc_options.php
