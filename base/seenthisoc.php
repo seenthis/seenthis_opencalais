@@ -1,11 +1,10 @@
 <?php
 
-/*
+/**
  * Plugin Seenthis_OpenCalais
- *
  */
-
-if (!defined('_ECRIRE_INC_VERSION')) { return;
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
 }
 
 // lire directement une declaration SQL SHOW CREATE TABLE => SPIP

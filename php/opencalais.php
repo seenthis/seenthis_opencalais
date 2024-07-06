@@ -1,6 +1,7 @@
 <?php
 
-if (!defined('_ECRIRE_INC_VERSION')) { return;
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
 }
 
 class HTTPSClientCalaisPost {
@@ -75,7 +76,8 @@ function getOpenCalais($content) {
 
 	$calais = new HTTPSClientCalaisPost();
 	$response = $calais->request($apiKey, $content);
-	if (!is_object($response)) { return false;
+	if (!is_object($response)) {
+		return false;
 	}
 
 	$ret = [];
